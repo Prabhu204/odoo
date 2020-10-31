@@ -8,3 +8,6 @@
 
 ### 4. Displaying warning message upon Obsolete state selection
    
+   
+For educational purposes I experimented with the [original source code] (https://github.com/odoo/odoo/tree/12.0). I thank 
+all contributors of this open source project.
