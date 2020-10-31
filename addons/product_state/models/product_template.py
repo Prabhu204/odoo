@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, models, fields
-
+from odoo.exceptions import ValidationError
 
 class ProductState(models.Model):
     _name = "product.state"
@@ -17,6 +17,8 @@ class ProductState(models.Model):
     product_ids = fields.One2many(
         "product.template", "product_state_id", string="State Products",
     )
+
+
     products_count = fields.Integer(
         string="Number of products", compute="_compute_products_count",
     )
@@ -38,7 +40,7 @@ class ProductState(models.Model):
         }
         for state in self:
             state.products_count = mapped_data.get(state.id, 0)
-
+        print(data)
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
@@ -50,9 +52,12 @@ class ProductTemplate(models.Model):
         inverse="_inverse_product_state",
         store=True,
     )
+
+
     product_state_id = fields.Many2one(
         "product.state", string="State", help="Select a state for this product",
     )
+
 
     @api.depends("product_state_id")
     def _compute_product_state(self):
@@ -77,3 +82,37 @@ class ProductTemplate(models.Model):
             if product_tmpl.product_state_id != product_state.id:
                 product_tmpl.product_state_id = product_state.id
         self.filtered(lambda x: not x.state).write({'product_state_id': False})
+
+    @api.one
+    def draft_progressbar(self):
+        self.write({
+            'state': 'draft',
+        })
+
+    # This function is triggered when the user clicks on the button 'Set to started'
+    @api.one
+    def sellable_progressbar(self):
+        self.write({
+            'state': 'sellable'
+        })
+
+    # This function is triggered when the user clicks on the button 'In progress'
+    @api.one
+    def end_progressbar(self):
+        self.write({
+            'state': 'end'
+        })
+
+    # This function is triggered when the user clicks on the button 'Done'
+    @api.one
+    def obsolete_progressbar(self):
+        self.write({
+            'state': 'obsolete',
+        })
+        current_id = self.ids
+        product_quantity = self.env['product.template'].browse(current_id)
+        for rec in product_quantity:
+            print(f"Product id {rec.id}\tProduct name {rec.name}\t product quantity {rec.available_quantity}")
+            if rec.available_quantity > 0:
+                raise ValidationError("State Obsolete not possible, Product has stock amount >0")
+

@@ -34,13 +34,14 @@
                         <button name="%(action_open_state_products)d"
                             type="action"
                             class="oe_stat_button"
-                            icon="fa-cubes">
+                            icon="fa-cubes"
+                           >
                             <field name="products_count" widget="statinfo" string="Products"/>
                         </button>
                     </div>
                     <div class="oe_title">
                         <label for="name" string="State Name" class="oe_edit_only"/>
-                        <h1>
+                        <h1 >
                             <field name="name"/>
                         </h1>
                     </div>
@@ -58,7 +59,7 @@
         <field name="name">product.state.tree</field>
         <field name="model">product.state</field>
         <field name="arch" type="xml">
-            <tree string="product.state">
+            <tree string="product.state" >
                 <field name="name"/>
                 <field name="description"/>
             </tree>
@@ -111,8 +112,20 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <header position="inside">
-                <field name="product_state_id" widget="statusbar" clickable="True"/>
-                <field name="state" invisible="1"/>
+<!--                <field name="product_state_id" widget="statusbar" clickable="True"-->
+<!--                />-->
+
+                <button string="Set to development" type="object" name="draft_progressbar" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+	    <!--The oe_highlight class gives the button a red color when it is saved.
+	    It is usually used to indicate the expected behaviour. -->
+
+                <button string="set to normal" type="object" name="sellable_progressbar" style="background-color:green;color:#fff;" attrs="{'invisible': [('state','=','sellable')]}" />
+	            <button string="set to end of lifecycle" type="object" name="end_progressbar" style="background-color:yellow;" attrs="{'invisible': [('state','=','end')]}"/>
+	            <button string="set to obsolete" type="object" name="obsolete_progressbar" style="background-color:red;color:#fff;" attrs="{'invisible': [('state','=','obsolete')]}"/>
+	    <!--This will create the statusbar, thanks to the widget. -->
+                    <field name="product_state_id" widget="statusbar" />
+                    <field name="state" invisible="1"/>
+
             </header>
         </field>
     </record>

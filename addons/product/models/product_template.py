@@ -148,6 +148,8 @@ class ProductTemplate(models.Model):
 
     # related to display product product information if is_product_variant
     barcode = fields.Char('Barcode', oldname='ean13', related='product_variant_ids.barcode', readonly=False)
+    available_quantity = fields.Integer('Available quantity', required=True, readonly=False)
+
     default_code = fields.Char(
         'Internal Reference', compute='_compute_default_code',
         inverse='_set_default_code', store=True)

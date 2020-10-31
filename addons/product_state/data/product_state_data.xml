@@ -4,7 +4,7 @@
     <!-- States -->
     <record id="product_state_draft" model="product.state">
       <field name="code">draft</field>
-      <field name="name">In Development</field>
+      <field name="name" >In Development</field>
       <field name="sequence">10</field>
     </record>
     <record id="product_state_sellable" model="product.state">
@@ -19,7 +19,7 @@
     </record>
     <record id="product_state_obsolete" model="product.state">
       <field name="code">obsolete</field>
-      <field name="name">Obsolete</field>
+      <field name="name" >Obsolete</field>
       <field name="sequence">40</field>
     </record>
   </data>
